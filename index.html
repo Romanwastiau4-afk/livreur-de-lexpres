@@ -1,0 +1,172 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Livreur de l'Expres</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#fff8e6;color:#242424}
+header{background:#ffd500;color:#a90000;text-align:center;padding:28px 15px}
+header h1{margin:0;font-size:27px}
+header p{font-weight:bold}
+nav{background:#c90000;padding:13px;text-align:center}
+nav a{color:white;text-decoration:none;font-weight:bold;margin:0 9px}
+main{max-width:650px;margin:auto;padding:18px}
+.card{background:white;padding:20px;border-radius:16px;margin:18px 0;box-shadow:0 3px 12px #00000012}
+h2{color:#c90000}
+label{display:block;font-weight:bold;margin-top:15px}
+input,select,textarea{width:100%;padding:13px;margin-top:7px;border:1px solid #ddd;border-radius:9px;font-size:16px;background:white}
+button{width:100%;padding:15px;margin-top:18px;background:#c90000;color:white;border:0;border-radius:10px;font-size:17px;font-weight:bold}
+.price{font-size:25px;color:#b00000;font-weight:bold}
+.small{font-size:13px;color:#666}
+.hidden{display:none}
+footer{background:#c90000;color:white;text-align:center;padding:22px}
+</style>
+</head>
+<body>
+
+<header>
+<h1>🚚 LIVREUR DE L'EXPRES</h1>
+<p>Vos colis et vos courses, livrés simplement !</p>
+</header>
+
+<nav>
+<a href="#commande">Commander</a>
+<a href="#suivi">Suivi</a>
+<a href="#zones">Nos villes</a>
+</nav>
+
+<main>
+<section class="card">
+<h2>Bienvenue chez nous !</h2>
+<p>Besoin d'envoyer un colis ou de faire des courses ? 
+Livreur de l'Expres prépare votre demande de livraison.</p>
+<p>💛 Service simple et pratique ❤️</p>
+</section>
+
+<section class="card" id="zones">
+<h2>📍 Nos villes desservies</h2>
+<p>Sète, Frontignan, Vic-la-Gardiole, Montpellier,
+Palavas-les-Flots, Maurin, Mireval, Fabrègues et Lattes.</p>
+</section>
+
+<section class="card" id="commande">
+<h2>📦🛒 Passer une commande</h2>
+
+<form id="orderForm">
+<label>Type de commande</label>
+<select id="type">
+<option value="colis">Livraison de colis</option>
+<option value="courses">Courses en magasin</option>
+</select>
+
+<label>Votre prénom et nom</label>
+<input id="name" required placeholder="Votre nom">
+
+<label>Votre téléphone</label>
+<input id="phone" type="tel" required placeholder="Votre numéro">
+
+<label>Ville de départ</label>
+<select id="from" required></select>
+
+<label>Ville d'arrivée</label>
+<select id="to" required></select>
+
+<div id="parcel">
+<label>Taille du colis</label>
+<select id="size">
+<option value="5">Petit - 5 €</option>
+<option value="10">Moyen - 10 €</option>
+<option value="15">Gros - 15 €</option>
+</select>
+<p>Prix indicatif : <span class="price" id="price">5 €</span></p>
+</div>
+
+<div id="shopping" class="hidden">
+<label>Quels produits souhaitez-vous ?</label>
+<textarea id="products" placeholder="Exemple : pain, lait, fruits..."></textarea>
+<p class="small">Le prix des courses et de la livraison sera confirmé avant validation.</p>
+</div>
+
+<label>Adresse de départ</label>
+<input id="pickup" required placeholder="Adresse complète">
+
+<label>Adresse de livraison</label>
+<input id="delivery" required placeholder="Adresse complète">
+
+<label>Date souhaitée</label>
+<input id="date" type="date" required>
+
+<label>Mode de paiement souhaité</label>
+<select id="payment">
+<option>Paiement à la livraison</option>
+<option>Paiement en ligne (pas encore disponible)</option>
+</select>
+
+<button type="submit">Envoyer ma demande</button>
+</form>
+
+<p id="result" role="status"></p>
+<p class="small">Maquette de démonstration : cette demande n'est pas encore transmise à un livreur.</p>
+</section>
+
+<section class="card" id="suivi">
+<h2>🔎 Suivre ma commande</h2>
+<p>Le suivi des livraisons sera disponible après connexion à une base de données.</p>
+<input placeholder="Numéro de suivi" disabled>
+<button type="button" disabled>Suivre ma commande</button>
+</section>
+
+<section class="card">
+<h2>📞 Contact</h2>
+<p>Pour toute question, les coordonnées du service client seront ajoutées ici.</p>
+</section>
+</main>
+
+<footer>
+<strong>Livreur de l'Expres</strong>
+<p>© 2026 - Tous droits réservés</p>
+</footer>
+
+<script>
+const cities=["Sète","Frontignan","Vic-la-Gardiole",
+"Montpellier","Palavas-les-Flots","Maurin",
+"Mireval","Fabrègues","Lattes"];
+
+["from","to"].forEach(id=>{
+ const select=document.getElementById(id);
+ select.innerHTML='<option value="">Choisir une ville</option>';
+ cities.forEach(city=>{
+  const option=document.createElement("option");
+  option.value=city;
+  option.textContent=city;
+  select.appendChild(option);
+ });
+});
+
+const type=document.getElementById("type");
+const parcel=document.getElementById("parcel");
+const shopping=document.getElementById("shopping");
+
+type.addEventListener("change",()=>{
+ const isParcel=type.value==="colis";
+ parcel.classList.toggle("hidden",!isParcel);
+ shopping.classList.toggle("hidden",isParcel);
+ document.getElementById("size").required=isParcel;
+ document.getElementById("products").required=!isParcel;
+});
+
+document.getElementById("size").addEventListener("change",e=>{
+ document.getElementById("price").textContent=e.target.value+" €";
+});
+
+document.getElementById("orderForm").addEventListener("submit",e=>{
+ e.preventDefault();
+ document.getElementById("result").textContent=
+ "Merci ! Le formulaire fonctionne en démonstration, mais ta demande n'a pas été envoyée. Le système de réception des commandes reste à installer.";
+});
+</script>
+</body>
+</html>
